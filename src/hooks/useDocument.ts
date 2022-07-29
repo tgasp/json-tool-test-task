@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { JSONHelper } from "../helpers/json-helper";
+import { useEffect } from "react";
 
 const useDocuments = () => {
     const [documents, setDocuments] = useRecoilState(documentsState);
@@ -48,7 +50,7 @@ const useDocuments = () => {
     };
 
     const updateDocument = (id: string, title?: string, body?: string) => {
-        const updated = documents.map(doc => {
+        const updated = documents.map((doc: DocumentModel) => {
             if (doc.id === id) {
                 return {
                     ...doc,
@@ -63,8 +65,16 @@ const useDocuments = () => {
         setDocuments(updated);
     };
 
+    const formatDocument = (index: number, tabSpace = 2) => {
+        const doc = documents[index];
+
+        if(!doc) return;
+
+        updateDocument(doc.id, "", JSONHelper.format(doc.body, tabSpace));
+    };
+
     const removeDocument = (doc: DocumentModel) => {
-        const filtered = documents.filter(d => d.id !== doc.id)
+        const filtered = documents.filter((d: DocumentModel) => d.id !== doc.id)
 
         setDocuments(filtered);
     };
@@ -75,7 +85,8 @@ const useDocuments = () => {
         createDocument,
         updateDocument,
         removeDocument,
-        openFromFile
+        openFromFile,
+        formatDocument
     }
 }
 
