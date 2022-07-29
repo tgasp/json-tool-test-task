@@ -1,10 +1,9 @@
 import { StartNavigation } from "./components/start-navigation";
-import { useRecoilState } from "recoil";
-import { documentsState } from "./store/atoms";
 import { DocumentsExplorer } from "./components/documents-explorer";
+import useDocuments from "./hooks/useDocument";
 
 function App() {
-  const [documents] = useRecoilState(documentsState);
+  const { documents } = useDocuments();
 
   return (
     <div className="App">
