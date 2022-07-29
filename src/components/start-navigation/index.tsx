@@ -1,6 +1,7 @@
 import { Container, Row, Col, Button, Stack } from "react-bootstrap";
 import "./styles.scss";
 import useDocuments from "../../hooks/useDocument";
+import { AiOutlineFileAdd, AiOutlineFile } from "react-icons/ai";
 
 export function StartNavigation() {
   const { createDocument, openFromFile } = useDocuments();
@@ -11,10 +12,10 @@ export function StartNavigation() {
         <Col className="d-flex justify-content-center">
           <Stack direction="horizontal" gap={3}>
             <Button variant="success" onClick={() => createDocument()}>
-              New document
+              <AiOutlineFileAdd /> New document
             </Button>
             <Button variant="warning" onClick={() => openFromFile()}>
-              Open from file
+              <AiOutlineFile /> Open from file
             </Button>
           </Stack>
         </Col>

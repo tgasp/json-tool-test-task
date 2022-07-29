@@ -3,6 +3,9 @@ import { useRecoilState } from "recoil";
 import { DocumentModel } from "../core/models/document.model";
 import { v4 as uuidv4 } from 'uuid';
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const useDocuments = () => {
     const [documents, setDocuments] = useRecoilState(documentsState);
 
@@ -30,7 +33,13 @@ const useDocuments = () => {
                 const fr = new FileReader();
 
                 fr.onload = function () {
-                    createDocument(file.name, fr.result as string)
+                    try {
+                        JSON.parse(fr.result as string);
+
+                        createDocument(file.name, fr.result as string)
+                    } catch (err) {
+                        toast("Invalid JSON.", { theme: 'dark', type: 'error' })
+                    }
                 }
 
                 fr.readAsText(files[0]);
