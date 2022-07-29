@@ -19,7 +19,7 @@ export function ActionsBar() {
           variant="secondary"
           size="sm"
           onClick={async () => {
-            openFromFile();
+            await openFromFile();
             setTabIndex(documents.length);
           }}
         >

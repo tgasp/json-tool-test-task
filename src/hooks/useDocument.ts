@@ -20,32 +20,37 @@ const useDocuments = () => {
         setDocuments([...documents, new DocumentModel(uuidv4(), title, body)]);
     };
 
-    const openFromFile = () => {
+    const openFromFile = async () => {
         const input = document.createElement('input');
         input.setAttribute('type', 'file');
         input.click();
 
-        input.addEventListener('change', (e: Event) => {
-            const target = e.target as HTMLInputElement;
-            const files = target.files;
+        return new Promise((resolve, reject) => {
+            input.addEventListener('change', (e: Event) => {
+                const target = e.target as HTMLInputElement;
+                const files = target.files;
+    
+                if (files && files[0]) {
+                    const file = files[0];
+    
+                    const fr = new FileReader();
+    
+                    fr.onload = function () {
+                        try {
+                            JSON.parse(fr.result as string);
+    
+                            createDocument(file.name, fr.result as string)
 
-            if (files && files[0]) {
-                const file = files[0];
-
-                const fr = new FileReader();
-
-                fr.onload = function () {
-                    try {
-                        JSON.parse(fr.result as string);
-
-                        createDocument(file.name, fr.result as string)
-                    } catch (err) {
-                        toast("Invalid JSON.", { theme: 'dark', type: 'error' })
+                            resolve('')
+                        } catch (err) {
+                            toast("Invalid JSON.", { theme: 'dark', type: 'error' })
+                            reject('Invalid JSON.')
+                        }
                     }
+    
+                    fr.readAsText(files[0]);
                 }
-
-                fr.readAsText(files[0]);
-            }
+            })
         })
     };
 
