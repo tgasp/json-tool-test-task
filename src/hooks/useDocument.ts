@@ -15,8 +15,47 @@ const useDocuments = () => {
         setDocuments([...documents, new DocumentModel(uuidv4(), title, body)]);
     };
 
-    const removeDocument = (document: DocumentModel) => {
-        const filtered = documents.filter(d => d.id !== document.id)
+    const openFromFile = () => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.click();
+
+        input.addEventListener('change', (e: Event) => {
+            const target = e.target as HTMLInputElement;
+            const files = target.files;
+
+            if (files && files[0]) {
+                const file = files[0];
+
+                const fr = new FileReader();
+
+                fr.onload = function () {
+                    createDocument(file.name, fr.result as string)
+                }
+
+                fr.readAsText(files[0]);
+            }
+        })
+    };
+
+    const updateDocument = (id: string, title?: string, body?: string) => {
+        const updated = documents.map(doc => {
+            if (doc.id === id) {
+                return {
+                    ...doc,
+                    title: title || doc.title,
+                    body: body || doc.body
+                }
+            }
+
+            return doc;
+        })
+
+        setDocuments(updated);
+    };
+
+    const removeDocument = (doc: DocumentModel) => {
+        const filtered = documents.filter(d => d.id !== doc.id)
 
         setDocuments(filtered);
     };
@@ -25,7 +64,9 @@ const useDocuments = () => {
         documents,
         setDocuments,
         createDocument,
-        removeDocument
+        updateDocument,
+        removeDocument,
+        openFromFile
     }
 }
 

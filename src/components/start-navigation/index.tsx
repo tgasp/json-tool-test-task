@@ -3,7 +3,7 @@ import "./styles.scss";
 import useDocuments from "../../hooks/useDocument";
 
 export function StartNavigation() {
-  const { createDocument } = useDocuments();
+  const { createDocument, openFromFile } = useDocuments();
 
   return (
     <Container className="start-navigation">
@@ -13,7 +13,9 @@ export function StartNavigation() {
             <Button variant="success" onClick={() => createDocument()}>
               New document
             </Button>
-            <Button variant="warning">Open from file</Button>
+            <Button variant="warning" onClick={() => openFromFile()}>
+              Open from file
+            </Button>
           </Stack>
         </Col>
       </Row>

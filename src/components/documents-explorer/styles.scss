@@ -1,4 +1,7 @@
 @import "react-tabs/style/react-tabs.css";
+// @import "ace-builds/src-noconflict/mode-json";
+// @import "ace-builds/src-noconflict/theme-github";
+// @import "ace-builds/src-noconflict/ext-language_tools";
 
 .react-tabs__tab {
   border-radius: 0;
@@ -33,5 +36,17 @@
     &:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
+  }
+}
+
+.ace-editor {
+  width: 100%;
+}
+
+.actions-navbar {
+  margin-bottom: 10px !important;
+
+  .nav-item {
+    margin: 5px;
   }
 }
