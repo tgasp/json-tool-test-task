@@ -6,16 +6,13 @@ import useDocuments from "../../hooks/useDocument";
 import { TiDelete } from "react-icons/ti";
 import { IoAddSharp } from "react-icons/io5";
 
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-json";
-import "ace-builds/src-noconflict/theme-one_dark";
-
 import "./styles.scss";
 import { useEffect } from "react";
 import { ActionsBar } from "./components/actions-bar";
 import useConfig from "../../hooks/useConfig";
 import { DocumentModel } from "../../core/models/document.model";
 import useTabIndex from "./hooks/useTabIndex";
+import { Editor } from "../editor";
 
 export function DocumentsExplorer() {
   const {
@@ -75,12 +72,9 @@ export function DocumentsExplorer() {
 
         {documents.map((d: DocumentModel) => (
           <TabPanel key={`tab-panel-${d.id}`}>
-            <AceEditor
-              mode="json"
-              theme="one_dark"
-              name={d.id}
+            <Editor
               value={d.body}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 updateDocument(d.id, "", e);
               }}
               tabSize={config.tabSpace}
