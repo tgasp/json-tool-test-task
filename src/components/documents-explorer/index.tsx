@@ -70,21 +70,18 @@ export function DocumentsExplorer() {
 
         <ActionsBar />
 
-        {documents.map((d: DocumentModel) => (
-          <TabPanel key={`tab-panel-${d.id}`}>
-            <Editor
-              value={d.body}
-              onChange={(e: any) => {
-                updateDocument(d.id, "", e);
-              }}
-              tabSize={config.tabSpace}
-              style={{
-                width: "100%",
-                height: "80vh",
-              }}
-            />
-          </TabPanel>
-        ))}
+        {documents.map((d: DocumentModel) => {
+          return (
+            <TabPanel key={`tab-panel-${d.id}`}>
+              <Editor
+                value={d.body}
+                onChange={(e: any) => {
+                  updateDocument(d.id, "", e.target.value);
+                }}
+              />
+            </TabPanel>
+          )
+        })}
       </Tabs>
     </Container>
   );

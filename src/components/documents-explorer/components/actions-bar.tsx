@@ -6,8 +6,12 @@ import { toast } from "react-toastify";
 import useTabIndex from "../hooks/useTabIndex";
 
 export function ActionsBar() {
-  const { documents, updateDocument, openFromFile, formatDocument } =
-    useDocuments();
+  const {
+    documents,
+    openFromFile,
+    formatDocument,
+    minifyDocument,
+  } = useDocuments();
 
   const { config, setConfig } = useConfig();
   const { tabIndex, setTabIndex } = useTabIndex();
@@ -59,7 +63,7 @@ export function ActionsBar() {
           onClick={() => {
             const doc = documents[tabIndex];
 
-            updateDocument(doc.id, "", JSONHelper.minify(doc.body));
+            minifyDocument(doc.id)
           }}
         >
           Minify
@@ -71,7 +75,7 @@ export function ActionsBar() {
           aria-label="Default select example"
           size="sm"
           value={String(config.tabSpace)}
-          onChange={(e) => {
+          onChange={(e: any) => {
             setConfig({
               tabSpace: Number(e.target.value),
             });

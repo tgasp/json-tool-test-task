@@ -6,10 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { JSONHelper } from "../helpers/json-helper";
-import { useEffect } from "react";
 
 const useDocuments = () => {
     const [documents, setDocuments] = useRecoilState(documentsState);
+
+    const getDocumentById = (id: string) => documents.find((d: DocumentModel) => d.id === id);
 
     const createDocument = (title?: string, body = '') => {
         if (!title) {
@@ -29,16 +30,16 @@ const useDocuments = () => {
             input.addEventListener('change', (e: Event) => {
                 const target = e.target as HTMLInputElement;
                 const files = target.files;
-    
+
                 if (files && files[0]) {
                     const file = files[0];
-    
+
                     const fr = new FileReader();
-    
+
                     fr.onload = function () {
                         try {
                             JSON.parse(fr.result as string);
-    
+
                             createDocument(file.name, fr.result as string)
 
                             resolve('')
@@ -47,21 +48,25 @@ const useDocuments = () => {
                             reject('Invalid JSON.')
                         }
                     }
-    
+
                     fr.readAsText(files[0]);
                 }
             })
         })
     };
 
-    const updateDocument = (id: string, title?: string, body?: string) => {
+    const updateDocument = (id: string, title?: string, body?: string, newId?: string) => {
         const updated = documents.map((doc: DocumentModel) => {
             if (doc.id === id) {
-                return {
+                const newDoc = {
                     ...doc,
                     title: title || doc.title,
                     body: body || doc.body
                 }
+
+                if (newId) newDoc.id = newId;
+
+                return newDoc;
             }
 
             return doc;
@@ -73,9 +78,15 @@ const useDocuments = () => {
     const formatDocument = (index: number, tabSpace = 2) => {
         const doc = documents[index];
 
-        if(!doc) return;
+        if (!doc) return;
 
-        updateDocument(doc.id, "", JSONHelper.format(doc.body, tabSpace));
+        updateDocument(doc.id, "", JSONHelper.format(doc.body, tabSpace), uuidv4());
+    };
+
+    const minifyDocument = (id: string) => {
+        const doc = getDocumentById(id)
+
+        updateDocument(id, "", JSONHelper.minify(doc.body), uuidv4());
     };
 
     const removeDocument = (doc: DocumentModel) => {
@@ -91,7 +102,8 @@ const useDocuments = () => {
         updateDocument,
         removeDocument,
         openFromFile,
-        formatDocument
+        formatDocument,
+        minifyDocument
     }
 }
 
